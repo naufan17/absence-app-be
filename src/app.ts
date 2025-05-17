@@ -5,6 +5,7 @@ import morgan from "morgan";
 import { responseInternalServerError, responseNotFound } from "./helpers/reponse.helper";
 import limiter from "./config/ratelimit";
 import cors from "./config/cors";
+import passport from "./config/passport";
 import logger from "./config/logger";
 import api from "./routes";
 
@@ -20,6 +21,7 @@ app.use(
   cors,
   helmet(),
   compress(),
+  passport.initialize(),
   express.json(),
   express.urlencoded({ extended: true }),
   morgan('combined', { stream }),

@@ -34,3 +34,12 @@ export const authorizeUser = (req: Request, res: Response, next: NextFunction) =
     next();
   })(req, res, next);
 };
+
+export const authorizeAll = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate('jwt', { session: false }, (err: Error, user: { id: string, role: 'admin' | 'verifikator' | 'user' }, info?: { message: string }) => {
+    if (err || !user) return responseUnauthorized(res, info?.message || 'Access token is invalid');
+    
+    req.user = user;
+    next();
+  })(req, res, next);
+};

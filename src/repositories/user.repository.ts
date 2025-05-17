@@ -27,7 +27,7 @@ export const userRepository = () => {
   }
 
   const findById = async (id: string) => {
-    return await prisma.user.findUnique({ 
+    return await prisma.user.findFirst({ 
       where: { 
         id 
       },

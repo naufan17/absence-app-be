@@ -12,16 +12,6 @@ export const registerValidator = () => {
       .withMessage("Email is required")
       .isEmail()
       .withMessage("Email is invalid"),
-    body("address")
-      .notEmpty()
-      .withMessage("Address is required")
-      .isString()
-      .withMessage("Address must be a string"),
-    body("phone")
-      .notEmpty()
-      .withMessage("Phone is required")
-      .isString()
-      .withMessage("Phone must be a string"),
     body("password")
       .notEmpty()
       .withMessage("Password is required")
