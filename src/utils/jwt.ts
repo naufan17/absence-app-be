@@ -12,8 +12,8 @@ export const generateJWTAccess = (payload: JwtPayload): AccessToken => {
   const token: string = jwt.sign(payload, secretToken, options);
 
   return {
-    accessToken: token,
-    expiresIn: Date.now() + expiredToken,
-    tokenType: 'Bearer'
+    access_token: token,
+    expires_in: Date.now() + expiredToken,
+    token_type: 'Bearer'
   };
 };

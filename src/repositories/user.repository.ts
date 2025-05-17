@@ -13,7 +13,7 @@ export const userRepository = () => {
   }
 
   const findByEmail = async (email: string) => {
-    return await prisma.user.findUnique({ 
+    return await prisma.user.findFirst({ 
       where: { 
         email 
       },
@@ -32,6 +32,7 @@ export const userRepository = () => {
         id 
       },
       select: {
+        id: true,
         name: true,
         email: true,
         role: true,

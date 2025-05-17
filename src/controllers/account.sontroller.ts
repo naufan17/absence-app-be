@@ -6,10 +6,10 @@ import logger from '../config/logger';
 
 export const accountController = () => {
   const profileCurentUser = async (req: Request | any, res: Response) => {
-    const { user }: { user: { id: string, role: 'admin' | 'verifikator' | 'user' } } = req;
+    const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
     try {
-      const currentUser = await userRepository().findById(user.id);
+      const currentUser = await userRepository().findById(user.sub);
       if (!currentUser) return responseNotFound(res, 'User not found');
 
       return responseOk(res, 'User found', currentUser);

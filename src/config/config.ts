@@ -11,7 +11,7 @@ const config: Config = {
   JWTExpiresIn: process.env.JWT_EXPIRES_IN || "3600000",
   CorsOrigin: process.env.CORS_ORIGIN || "http://localhost:3000",
   RateLimitMax: process.env.RATE_LIMIT_MAX || "100",
-  RateLimitWindowMs: process.env.RATE_LIMIT_WINDOW_MS || "3600000",
+  RateLimitWindowMs: process.env.RATE_LIMIT_WINDOW_MS || "60000",
 }
 
 export default config
