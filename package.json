@@ -6,7 +6,7 @@
   "keywords": [],
   "author": "Muhammad Naufan Athoillah",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "concurrently \"npx tsc -w\" \"nodemon src/index.ts\"",
     "start": "node dist/index.js",

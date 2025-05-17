@@ -13,3 +13,52 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id              String        @id @default(uuid())
+  name            String        @db.VarChar(100)
+  email           String        @unique
+  password        String        @db.VarChar(255)
+  is_verified     Boolean       @default(false)
+  role            Role          @default(user)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  leave_requests  LeaveRequest[]
+}
+
+model LeaveType {
+  id              String        @id @default(uuid())
+  name            String        @db.VarChar(100)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  leave_requests  LeaveRequest[] 
+}
+
+model LeaveRequest {
+  id              String        @id @default(uuid())
+  user_id         String    
+  user            User          @relation(fields: [user_id], references: [id])
+  title           String        @db.VarChar(100)
+  description     String        @db.VarChar(255)
+  start_date      DateTime      @default(now())
+  end_date        DateTime      @default(now())
+  leave_type_id   String
+  leave_type      LeaveType     @relation(fields: [leave_type_id], references: [id])
+  status          LeaveStatus   @default(pending)
+  comment         String?       @db.VarChar(255)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+  deleted_at      DateTime  
+}
+
+enum Role {
+  admin
+  verifikator
+  user
+}
+
+enum LeaveStatus {
+  pending
+  approved
+  rejected
+}
