@@ -48,7 +48,7 @@ model LeaveRequest {
   comment         String?       @db.VarChar(255)
   created_at      DateTime      @default(now())
   updated_at      DateTime      @updatedAt
-  deleted_at      DateTime  
+  deleted_at      DateTime?      
 }
 
 enum Role {
@@ -59,6 +59,8 @@ enum Role {
 
 enum LeaveStatus {
   pending
+  cancel
+  revoked
   approved
   rejected
 }
