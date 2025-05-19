@@ -4,7 +4,7 @@ import { responseInternalServerError, responseNotFound, responseOk } from "../..
 import logger from "../../config/logger";
 
 export const leaveRequestVerifikatorController = () => {
-  const allLeaveRequests = async (req: Request, res: Response) => {
+  const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
     const { status }: { status?: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected' } = req.query;
 
     try {
@@ -20,7 +20,7 @@ export const leaveRequestVerifikatorController = () => {
     }
   }
 
-  const updateStatus = async (req: Request, res: Response) => {
+  const updateStatus = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { status, comment } = req.body;
 

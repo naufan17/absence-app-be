@@ -4,7 +4,7 @@ import { responseNotFound, responseOk, responseInternalServerError } from "../..
 import logger from "../../config/logger";
 
 export const userVerifikatorController = () => {
-  const allUsers = async (req: Request, res: Response) => {
+  const allUsers = async (req: Request, res: Response): Promise<void> => {
     const { isVerified }: { isVerified?: string } = req.query; 
     let isVerifiedBool: boolean | undefined = undefined;
     
@@ -26,7 +26,7 @@ export const userVerifikatorController = () => {
     }
   }
 
-  const updateUserVerified = async (req: Request, res: Response) => {
+  const updateUserVerified = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
     try {

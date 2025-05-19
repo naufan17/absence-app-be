@@ -4,7 +4,7 @@ import { responseInternalServerError, responseNotFound, responseOk } from "../he
 import logger from "../config/logger";
 
 export const leaveTypeController = () => {
-  const allLeaveTypes = async (req: Request, res: Response) => {
+  const allLeaveTypes = async (req: Request, res: Response): Promise<void> => {
     try {
       const leaveTypes = await leaveTypeRepository().findAll();
       if (leaveTypes.length === 0) return responseNotFound(res, 'Leave types not found');

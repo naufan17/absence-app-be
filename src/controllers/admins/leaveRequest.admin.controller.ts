@@ -4,7 +4,7 @@ import { responseInternalServerError, responseNotFound, responseOk } from "../..
 import logger from "../../config/logger";
 
 export const leaveRequestAdminController = () => {
-  const allLeaveRequests = async (req: Request, res: Response) => {
+  const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
     try {
       const leaveRequests = await leaveRequestRepository().findAll();
       if (leaveRequests.length === 0) return responseNotFound(res, 'Leave requests not found');

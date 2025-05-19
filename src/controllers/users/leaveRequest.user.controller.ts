@@ -5,7 +5,7 @@ import { responseBadRequest, responseCreated, responseForbidden, responseInterna
 import logger from "../../config/logger";
 
 export const leaveRequestUserController = () => {
-  const createLeaveRequest = async (req: Request | any, res: Response) => {
+  const createLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {
     const { title, description, startDate, endDate, leaveTypeId } = req.body; 
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
@@ -26,7 +26,7 @@ export const leaveRequestUserController = () => {
     }
   }
 
-  const updateLeaveRequest = async (req: Request | any, res: Response) => {
+  const updateLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {
     const { id } = req.params;
     const { title, description, startDate, endDate, leaveTypeId } = req.body; 
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
@@ -44,7 +44,7 @@ export const leaveRequestUserController = () => {
     }
   }
 
-  const allLeaveRequests = async (req: Request | any, res: Response) => {
+  const allLeaveRequests = async (req: Request | any, res: Response): Promise<void> => {
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
     try {
@@ -60,7 +60,7 @@ export const leaveRequestUserController = () => {
     }
   }
 
-  const cancelLeaveRequest = async (req: Request | any, res: Response) => {
+  const cancelLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {
     const { id } = req.params;
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
@@ -81,7 +81,7 @@ export const leaveRequestUserController = () => {
     }
   }
 
-  const deleteLeaveRequest = async (req: Request | any, res: Response) => {
+  const deleteLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {
     const { id } = req.params;
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 

@@ -5,7 +5,7 @@ import logger from "../../config/logger";
 import { validationResult } from "express-validator";
 
 export const userAdminController = () => {
-  const allUsers = async (req: Request, res: Response) => {
+  const allUsers = async (req: Request, res: Response): Promise<void> => {
     try {
       const users = await userRepository().findAllWithRole();
       if (users.length === 0) return responseNotFound(res, 'Users not found');
@@ -19,7 +19,7 @@ export const userAdminController = () => {
     }
   }
   
-  const updateUserRole = async (req: Request, res: Response) => {
+  const updateUserRole = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const { role } = req.body
 

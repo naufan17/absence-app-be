@@ -5,7 +5,7 @@ import { responseInternalServerError, responseNotFound, responseOk } from '../he
 import logger from '../config/logger';
 
 export const accountController = () => {
-  const profileCurentUser = async (req: Request | any, res: Response) => {
+  const profileCurentUser = async (req: Request | any, res: Response): Promise<void> => {
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
     try {
