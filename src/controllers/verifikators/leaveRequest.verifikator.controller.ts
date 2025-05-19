@@ -5,7 +5,7 @@ import logger from "../../config/logger";
 
 export const leaveRequestVerifikatorController = () => {
   const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
-    const { status }: { status?: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected' } = req.query;
+    const { status }: { status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected' } = req.query;
 
     try {
       const leaveRequests = await leaveRequestRepository().findAll(status);

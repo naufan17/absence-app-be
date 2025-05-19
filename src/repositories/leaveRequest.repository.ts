@@ -40,7 +40,7 @@ export const leaveRequestRepository = () => {
     });
   }
 
-  const findAll = async (status?: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected') => {
+  const findAll = async (status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
     return await prisma.leaveRequest.findMany({
       where: {
         status
@@ -64,12 +64,13 @@ export const leaveRequestRepository = () => {
             name: true
           }
         },
-        status: true
+        status: true,
+        comment: true
       }
     });
   }
 
-  const findAllByStatus = async (status: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected') => {
+  const findAllByStatus = async (status: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
     return await prisma.leaveRequest.findMany({
       where: {
         status
@@ -93,7 +94,8 @@ export const leaveRequestRepository = () => {
             name: true
           }
         },
-        status: true
+        status: true,
+        comment: true
       }
     });
   }
@@ -141,12 +143,13 @@ export const leaveRequestRepository = () => {
             name: true
           }
         },
-        status: true
+        status: true,
+        comment: true
       }
     });
   }
 
-  const updateStatus = async (id: string, status: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected', comment: string) => {
+  const updateStatus = async (id: string, status: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected', comment: string) => {
     return await prisma.leaveRequest.update({ 
       where: { 
         id 
@@ -164,7 +167,7 @@ export const leaveRequestRepository = () => {
         id 
       }, 
       data: { 
-        status: 'cancel',
+        status: 'canceled',
       } 
     });
   }

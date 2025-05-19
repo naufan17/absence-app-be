@@ -59,7 +59,7 @@ enum Role {
 
 enum LeaveStatus {
   pending
-  cancel
+  canceled
   revoked
   approved
   rejected
