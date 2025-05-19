@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { loginValidator, registerValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/auth.validator';
-import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator } from '../validators/leaveRequest.validator';
+import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
 import { authorizeAdmin, authorizeAll, authorizeUser, authorizeVerifikator } from '../middlewares/authorization.middleware';
 import { authController } from '../controllers/auth.controller';
 import { accountController } from '../controllers/account.controller';
@@ -32,7 +32,7 @@ router.get('/admin/leave-requests', authorizeAdmin, leaveRequestAdminController(
 router.get('/verifikator/users', authorizeVerifikator, userVerifikatorController().allUsers)
 router.put('/verifikator/users/:id/verified', authorizeVerifikator, updateVerifiedUserValidator(), userVerifikatorController().updateUserVerified)
 router.get('/verifikator/leave-requests', authorizeVerifikator, leaveRequestVerifikatorController().allLeaveRequests)
-// router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator())
+router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator(), leaveRequestVerifikatorController().updateStatus)
 
 // User
 router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)
