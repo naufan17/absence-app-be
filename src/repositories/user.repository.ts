@@ -69,7 +69,7 @@ export const userRepository = () => {
         id: true,
         name: true,
         email: true,
-        is_verified: true
+        is_verified: true,
       }
     });
   }

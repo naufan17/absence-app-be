@@ -8,12 +8,20 @@ import { userAdminController } from '../controllers/admins/user.admin.controller
 import { leaveRequestAdminController } from '../controllers/admins/leaveRequest.admin.controller';
 import { userVerifikatorController } from '../controllers/verifikators/user.verifikator.controller';
 import { leaveRequestVerifikatorController } from '../controllers/verifikators/leaveRequest.verifikator.controller';
+import { leaveTypeController } from '../controllers/leaveType.controller';
+import { leaveRequestUserController } from '../controllers/users/leaveRequest.user.controller';
 
 const router: Router = express.Router();
 
+// Auth
 router.post('/auth/login', loginValidator(), authController().login);
 router.post('/auth/register', registerValidator(), authController().register);  
+
+// Account
 router.get('/account/profile', authorizeAll, accountController().profileCurentUser);
+
+// Leave Type
+router.get('/leave-types', leaveTypeController().allLeaveTypes);
 
 // Admin
 router.get('/admin/users', authorizeAdmin, userAdminController().allUsers)
@@ -27,10 +35,10 @@ router.get('/verifikator/leave-requests', authorizeVerifikator, leaveRequestVeri
 // router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator())
 
 // User
-router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator())
-router.get('/user/leave-requests', authorizeUser)
-router.put('/user/leave-requests/:id', authorizeUser, updateDescriptionLeaveRequestValidator())
-router.put('/user/leave-requests/:id/cancel', authorizeUser)
-router.delete('/user/leave-requests/:id', authorizeUser)
+router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)
+router.get('/user/leave-requests', authorizeUser, leaveRequestUserController().allLeaveRequests)
+router.put('/user/leave-requests/:id', authorizeUser, updateDescriptionLeaveRequestValidator(), leaveRequestUserController().updateLeaveRequest)
+router.put('/user/leave-requests/:id/cancel', authorizeUser, leaveRequestUserController().cancelLeaveRequest)
+router.delete('/user/leave-requests/:id', authorizeUser, leaveRequestUserController().deleteLeaveRequest)
 
 export default router;
