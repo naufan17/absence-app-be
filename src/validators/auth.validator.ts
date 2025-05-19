@@ -80,8 +80,8 @@ export const updateRoleUserValidator = () => {
       .withMessage('Role is required')
       .isString()
       .withMessage('Role must be a string')
-      .isIn(['admin', 'user'])
-      .withMessage('Role must be one of the following: admin, user')
+      .isIn(['verifikator', 'user'])
+      .withMessage('Role must be one of the following: verifikator, user')
   ]
 }
 

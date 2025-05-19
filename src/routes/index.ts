@@ -1,9 +1,13 @@
 import express, { Router } from 'express';
-import { loginValidator, registerValidator, updatePasswordValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/auth.validator';
-import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
+import { loginValidator, registerValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/auth.validator';
+import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator } from '../validators/leaveRequest.validator';
 import { authorizeAdmin, authorizeAll, authorizeUser, authorizeVerifikator } from '../middlewares/authorization.middleware';
 import { authController } from '../controllers/auth.controller';
-import { accountController } from '../controllers/account.sontroller';
+import { accountController } from '../controllers/account.controller';
+import { userAdminController } from '../controllers/admins/user.admin.controller';
+import { leaveRequestAdminController } from '../controllers/admins/leaveRequest.admin.controller';
+import { userVerifikatorController } from '../controllers/verifikators/user.verifikator.controller';
+import { leaveRequestVerifikatorController } from '../controllers/verifikators/leaveRequest.verifikator.controller';
 
 const router: Router = express.Router();
 
@@ -12,17 +16,15 @@ router.post('/auth/register', registerValidator(), authController().register);
 router.get('/account/profile', authorizeAll, accountController().profileCurentUser);
 
 // Admin
-router.get('/admin/users', authorizeAdmin)
-router.post('/admin/users/register', authorizeAdmin, registerValidator())
-router.put('/admin/users/:id/role', authorizeAdmin, updateRoleUserValidator())
-router.put('/admin/users/:id/update-password', authorizeAdmin, updatePasswordValidator())
-router.get('/admin/leave-requests', authorizeAdmin)
+router.get('/admin/users', authorizeAdmin, userAdminController().allUsers)
+router.put('/admin/users/:id/role', authorizeAdmin, updateRoleUserValidator(), userAdminController().updateUserRole)
+router.get('/admin/leave-requests', authorizeAdmin, leaveRequestAdminController().allLeaveRequests)
 
 // Verifikator
-router.get('/verifikator/users', authorizeVerifikator)
-router.put('/verifikator/users/:id/verified', authorizeVerifikator, updateVerifiedUserValidator())
-router.get('/verifikator/leave-requests', authorizeVerifikator)
-router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator())
+router.get('/verifikator/users', authorizeVerifikator, userVerifikatorController().allUsers)
+router.put('/verifikator/users/:id/verified', authorizeVerifikator, updateVerifiedUserValidator(), userVerifikatorController().updateUserVerified)
+router.get('/verifikator/leave-requests', authorizeVerifikator, leaveRequestVerifikatorController().allLeaveRequests)
+// router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator())
 
 // User
 router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator())

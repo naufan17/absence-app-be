@@ -53,6 +53,7 @@ export const userRepository = () => {
         name: true,
         email: true,
         role: true,
+        is_verified: true
       }
     });
   }
@@ -63,30 +64,11 @@ export const userRepository = () => {
         role: { 
           in: ['user'] 
         },
-        is_verified: true
       },
       select: {
         id: true,
         name: true,
         email: true,
-        is_verified: true
-      }
-    });
-  }
-
-  const findAllByVerified = async (is_verified: boolean) => {
-    return await prisma.user.findMany({
-      where: {
-        role: { 
-          in: ['user', 'verifikator'] 
-        },
-        is_verified
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
         is_verified: true
       }
     });
@@ -131,7 +113,6 @@ export const userRepository = () => {
     findById,
     findAllWithRole,
     findAllWithVerified,
-    findAllByVerified,
     updateVerified,
     updateRole,
     updatePassword
