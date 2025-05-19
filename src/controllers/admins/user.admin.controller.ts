@@ -6,8 +6,10 @@ import { validationResult } from "express-validator";
 
 export const userAdminController = () => {
   const allUsers = async (req: Request, res: Response): Promise<void> => {
+    const { role }: { role?: 'verifikator' | 'user' } = req.query;
+
     try {
-      const users = await userRepository().findAllWithRole();
+      const users = await userRepository().findAllWithRole(role);
       if (users.length === 0) return responseNotFound(res, 'Users not found');
 
       return responseOk(res, 'Users found', users);

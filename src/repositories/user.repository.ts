@@ -41,12 +41,16 @@ export const userRepository = () => {
     });
   }
 
-  const findAllWithRole = async () => {
+  const findAllWithRole = async (role?: 'user' | 'verifikator') => {
     return await prisma.user.findMany({
       where: {
-        role: { 
-          in: ['user', 'verifikator'] 
-        },
+        ...(role ? { 
+          role 
+        } : { 
+          role: { 
+            in: ['user', 'verifikator'] 
+          } 
+        }),
       },
       orderBy: {
         role: 'asc',
