@@ -5,8 +5,10 @@ import logger from "../../config/logger";
 
 export const leaveRequestVerifikatorController = () => {
   const allLeaveRequests = async (req: Request, res: Response) => {
+    const { status }: { status?: 'pending' | 'cancel' | 'revoked' | 'approved' | 'rejected' } = req.query;
+
     try {
-      const leaveRequests = await leaveRequestRepository().findAll();
+      const leaveRequests = await leaveRequestRepository().findAll(status);
       if (leaveRequests.length === 0) return responseNotFound(res, 'Leave requests not found');
 
       return responseOk(res, 'Leave requests found', leaveRequests);

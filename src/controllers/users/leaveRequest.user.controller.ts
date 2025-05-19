@@ -1,16 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
 import { leaveRequestRepository } from "../../repositories/leaveRequest.repository";
-import { responseCreated, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
+import { responseBadRequest, responseCreated, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
-
 
 export const leaveRequestUserController = () => {
   const createLeaveRequest = async (req: Request | any, res: Response) => {
     const { title, description, startDate, endDate, leaveTypeId } = req.body; 
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
+    if (startDate > new Date()) return responseBadRequest(res, 'Start date must be less than current date');
+    if (startDate > endDate) return responseBadRequest(res, 'Start date must be less than end date');
+
     try {
+
       const leaveRequest = await leaveRequestRepository().create(user.sub, title, description, startDate, endDate, leaveTypeId);
       if (!leaveRequest) return responseInternalServerError(res, 'Failed to create leave request');
       
@@ -62,10 +65,12 @@ export const leaveRequestUserController = () => {
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
     try {
-      const leaveRequest = await leaveRequestRepository().updateStatusCancel(id);
-      if (!leaveRequest) return responseInternalServerError(res, 'Failed to cancel leave request');
-      if (leaveRequest.user_id !== user.sub) return responseNotFound(res, 'Leave request not found');
+      const leaveRequest = await leaveRequestRepository().findById(id);
+      if (!leaveRequest || leaveRequest.user_id !== user.sub) return responseNotFound(res, 'Leave request not found');
       if (['cancel', 'revoked', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
+
+      const leaveRequestCancel = await leaveRequestRepository().updateStatusCancel(id);
+      if (!leaveRequestCancel) return responseInternalServerError(res, 'Failed to cancel leave request');
       
       return responseOk(res, 'Leave request canceled successfully');
     } catch (error) {

@@ -30,9 +30,9 @@ router.get('/admin/leave-requests', authorizeAdmin, leaveRequestAdminController(
 
 // Verifikator
 router.get('/verifikator/users', authorizeVerifikator, userVerifikatorController().allUsers)
-router.put('/verifikator/users/:id/verified', authorizeVerifikator, updateVerifiedUserValidator(), userVerifikatorController().updateUserVerified)
+router.put('/verifikator/users/:id/verify', authorizeVerifikator, updateVerifiedUserValidator(), userVerifikatorController().updateUserVerified)
 router.get('/verifikator/leave-requests', authorizeVerifikator, leaveRequestVerifikatorController().allLeaveRequests)
-router.put('/verifikator/leave-requests/:id/accept', authorizeVerifikator, updateLeaveRequestValidator(), leaveRequestVerifikatorController().updateStatus)
+router.put('/verifikator/leave-requests/:id/reply', authorizeVerifikator, updateLeaveRequestValidator(), leaveRequestVerifikatorController().updateStatus)
 
 // User
 router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)

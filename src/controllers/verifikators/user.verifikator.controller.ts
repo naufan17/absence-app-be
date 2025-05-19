@@ -5,8 +5,16 @@ import logger from "../../config/logger";
 
 export const userVerifikatorController = () => {
   const allUsers = async (req: Request, res: Response) => {
+    const { isVerified }: { isVerified?: string } = req.query; 
+    let isVerifiedBool: boolean | undefined = undefined;
+    
+    if (typeof isVerified === 'string') {
+      if (isVerified.toLowerCase() === 'true') isVerifiedBool = true;
+      else if (isVerified.toLowerCase() === 'false') isVerifiedBool = false;
+    }
+
     try {
-      const users = await userRepository().findAllWithVerified();
+      const users = await userRepository().findAllWithVerified(isVerifiedBool);
       if (users.length === 0) return responseNotFound(res, 'Users not found');
 
       return responseOk(res, 'Users found', users);
