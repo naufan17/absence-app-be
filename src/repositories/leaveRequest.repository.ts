@@ -45,7 +45,7 @@ export const leaveRequestRepository = () => {
         status
       },
       orderBy: {
-        created_at: 'desc'
+        updated_at: 'desc'
       },
       select: {
         id: true,
@@ -192,6 +192,26 @@ export const leaveRequestRepository = () => {
     });
   }
 
+    const totalCountByUserId = async (user_id: string) => {
+    return await prisma.leaveRequest.count({
+      where: {
+        user_id
+      }
+    });
+  }
+
+  const statusCountsByUserId = async (user_id: string) => {
+    return await prisma.leaveRequest.groupBy({
+      by: ['status'],
+      where: {
+        user_id
+      },
+      _count: {
+        status: true
+      }
+    });
+  }
+
   return {
     create,
     update,
@@ -203,6 +223,8 @@ export const leaveRequestRepository = () => {
     updateStatusCancel,
     deleteById,
     totalCount,
-    statusCounts
+    statusCounts,
+    totalCountByUserId,
+    statusCountsByUserId
   }
 }

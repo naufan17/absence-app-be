@@ -113,11 +113,40 @@ export const leaveRequestUserController = () => {
     }
   }
 
+    const getStatistics = async (req: Request | any, res: Response): Promise<void> => {
+    const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
+
+    try {
+      const totalCount = await leaveRequestRepository().totalCountByUserId(user.sub);
+      const statusCounts = await leaveRequestRepository().statusCountsByUserId(user.sub);
+      type Status = 'pending' | 'revoked' | 'approved' | 'rejected' | 'canceled';
+      const countsByStatus: Record<Status, number> = {
+        pending: 0,
+        revoked: 0,
+        approved: 0,
+        rejected: 0,
+        canceled: 0
+      };
+
+      statusCounts.forEach(item => {
+        countsByStatus[item.status as keyof typeof countsByStatus] = item._count.status;
+      });
+
+      return responseOk(res, 'Statistics found', { total: totalCount, ...countsByStatus });
+    } catch (error) {
+      logger.error(error);
+      console.error(error);
+      
+      return responseInternalServerError(res, 'Failed to get statistics');
+    }
+  }
+
   return {
     createLeaveRequest,
     updateLeaveRequest,
     cancelLeaveRequest,
     allLeaveRequests,
-    deleteLeaveRequest
+    deleteLeaveRequest,
+    getStatistics
   };
 }

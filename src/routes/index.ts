@@ -43,10 +43,11 @@ router.put('/verifikator/leave-requests/:id/reply', authorizeVerifikator, update
 router.get("/verifikator/leave-requests/statistics", authorizeVerifikator, leaveRequestVerifikatorController().getStatistics);
 
 // User
-router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)
 router.get('/user/leave-requests', authorizeUser, leaveRequestUserController().allLeaveRequests)
+router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)
 router.put('/user/leave-requests/:id', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().updateLeaveRequest)
 router.put('/user/leave-requests/:id/cancel', authorizeUser, leaveRequestUserController().cancelLeaveRequest)
 router.delete('/user/leave-requests/:id', authorizeUser, leaveRequestUserController().deleteLeaveRequest)
+router.get('/user/leave-requests/statistics', authorizeUser, leaveRequestUserController().getStatistics)
 
 export default router;

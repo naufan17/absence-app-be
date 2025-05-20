@@ -62,9 +62,10 @@ export const userRepository = () => {
           } 
         }),
       },
-      orderBy: {
-        role: 'asc',
-      },
+      orderBy: [
+        { role: 'asc' },
+        { updated_at: 'desc' }
+      ],
       select: {
         id: true,
         name: true,
@@ -82,9 +83,10 @@ export const userRepository = () => {
         },
         is_verified
       },
-      orderBy: {
-        is_verified: 'asc',
-      },
+      orderBy: [
+        { is_verified: 'asc' },
+        { updated_at: 'desc' }
+      ],
       select: {
         id: true,
         name: true,
