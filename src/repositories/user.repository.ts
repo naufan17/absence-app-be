@@ -12,6 +12,17 @@ export const userRepository = () => {
     });
   }
 
+    const createWithRole = async (name: string, email: string, password: string, role: 'user' | 'verifikator') => {
+    return await prisma.user.create({ 
+      data: { 
+        name, 
+        email, 
+        password,
+        role
+      } 
+    });
+  }
+
   const findByEmail = async (email: string) => {
     return await prisma.user.findFirst({ 
       where: { 
@@ -131,6 +142,7 @@ export const userRepository = () => {
 
   return {
     create,
+    createWithRole,
     findByEmail,
     findById,
     findAllWithRole,

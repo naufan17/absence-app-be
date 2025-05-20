@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { loginValidator, registerValidator, updatePasswordValidator, updateProfileValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/user.validator';
+import { loginValidator, registerValidator, registerWithRoleValidator, updatePasswordValidator, updateProfileValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/user.validator';
 import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
 import { authorizeAdmin, authorizeAll, authorizeUser, authorizeVerifikator } from '../middlewares/authorization.middleware';
 import { authController } from '../controllers/auth.controller';
@@ -27,7 +27,9 @@ router.get('/leave-types', leaveTypeController().allLeaveTypes);
 
 // Admin
 router.get('/admin/users', authorizeAdmin, userAdminController().allUsers)
+router.post('/admin/users/register', authorizeAdmin, registerWithRoleValidator(), userAdminController().createNeWUser)
 router.put('/admin/users/:id/role', authorizeAdmin, updateRoleUserValidator(), userAdminController().updateUserRole)
+router.put('/admin/users/:id/reset-password', authorizeAdmin, updatePasswordValidator(), userAdminController().resetPasswordUser)
 router.get('/admin/leave-requests', authorizeAdmin, leaveRequestAdminController().allLeaveRequests)
 
 // Verifikator

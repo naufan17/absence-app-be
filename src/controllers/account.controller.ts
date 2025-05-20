@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { userRepository } from '../repositories/user.repository';
 import { responseBadRequest, responseInternalServerError, responseNotFound, responseOk } from '../helpers/reponse.helper';
 import logger from '../config/logger';
@@ -55,7 +56,10 @@ export const accountController = () => {
       const currentUser = await userRepository().findById(user.sub);
       if (!currentUser) return responseNotFound(res, 'User not found');
 
-      const updatedUser = await userRepository().updatePassword(user.sub, password);
+      const hashPassword = bcrypt.hashSync(password, 10);
+      if (!hashPassword) return responseInternalServerError(res, 'Failed to hash password');
+
+      const updatedUser = await userRepository().updatePassword(user.sub, hashPassword);
       if (!updatedUser) return responseInternalServerError(res, 'Failed to update password');
 
       return responseOk(res, 'Password updated');
