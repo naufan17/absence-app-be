@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
 import { userRepository } from '../repositories/user.repository';
 import { responseBadRequest, responseInternalServerError, responseNotFound, responseOk } from '../helpers/reponse.helper';
 import logger from '../config/logger';
-import { validationResult } from 'express-validator';
 
 export const accountController = () => {
   const profileCurentUser = async (req: Request | any, res: Response): Promise<void> => {

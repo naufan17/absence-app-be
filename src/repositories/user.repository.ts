@@ -1,6 +1,5 @@
 import prisma from "../config/prisma"
 
-
 export const userRepository = () => {
   const create = async (name: string, email: string, password: string) => {
     return await prisma.user.create({ 

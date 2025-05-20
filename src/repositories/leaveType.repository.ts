@@ -1,6 +1,5 @@
 import prisma from "../config/prisma"
 
-
 export const leaveTypeRepository = () => {
   const findAll = async () => {
     return await prisma.leaveType.findMany({

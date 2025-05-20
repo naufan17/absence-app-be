@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import { leaveRequestRepository } from "../../repositories/leaveRequest.repository";
 import { responseBadRequest, responseCreated, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
-import { validationResult } from "express-validator";
 
 export const leaveRequestUserController = () => {
   const createLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {

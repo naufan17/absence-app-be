@@ -1,9 +1,9 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import { userRepository } from "../../repositories/user.repository"
 import { responseNotFound, responseOk, responseInternalServerError, responseBadRequest, responseConflict, responseCreated } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
-import bcrypt from "bcryptjs";
-import { validationResult } from "express-validator";
 
 export const userAdminController = () => {
   const allUsers = async (req: Request, res: Response): Promise<void> => {

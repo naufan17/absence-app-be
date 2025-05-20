@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import { leaveRequestRepository } from "../../repositories/leaveRequest.repository";
 import { responseBadRequest, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
-import { validationResult } from "express-validator";
 
 export const leaveRequestVerifikatorController = () => {
   const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
