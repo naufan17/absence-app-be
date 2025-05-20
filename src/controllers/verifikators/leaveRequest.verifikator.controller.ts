@@ -25,8 +25,11 @@ export const leaveRequestVerifikatorController = () => {
     const { status, comment } = req.body;
 
     try {
-      const leaveRequest = await leaveRequestRepository().updateStatus(id, status, comment);
-      if (!leaveRequest) return responseInternalServerError(res, 'Failed to update leave request status');
+      const leaveRequest = await leaveRequestRepository().findById(id);
+      if (!leaveRequest) return responseNotFound(res, 'Leave request not found');
+
+      const leaveRequestStatus = await leaveRequestRepository().updateStatus(id, status, comment);
+      if (!leaveRequestStatus) return responseInternalServerError(res, 'Failed to update leave request status');
       
       return responseOk(res, 'Leave request status updated successfully');
     } catch (error) {

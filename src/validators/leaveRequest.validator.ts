@@ -41,7 +41,7 @@ export const createLeaveRequestValidator = () => {
       .withMessage('Status is required')
       .isString()
       .withMessage('Status must be a string')
-      .isIn(['pending', 'cancel', 'revoked', 'approved', 'rejected'])
+      .isIn(['pending', 'canceled', 'revoked', 'approved', 'rejected'])
       .withMessage('Status must be one of the following: pending, cancel, revoked, approved, rejected'),
   ]
 }
@@ -53,7 +53,7 @@ export const updateLeaveRequestValidator = () => {
       .withMessage('Status is required')
       .isString()
       .withMessage('Status must be a string')
-      .isIn(['pending', 'cancel', 'revoked', 'approved', 'rejected'])
+      .isIn(['pending', 'canceled', 'revoked', 'approved', 'rejected'])
       .withMessage('Status must be one of the following: pending, cancel, revoked, approved, rejected'),
     body('comment')
       .notEmpty()

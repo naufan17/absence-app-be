@@ -79,7 +79,7 @@ export const userRepository = () => {
     return await prisma.user.findMany({
       where: {
         role: { 
-          in: ['user' ] 
+          in: ['user', 'verifikator'] 
         },
         is_verified
       },
