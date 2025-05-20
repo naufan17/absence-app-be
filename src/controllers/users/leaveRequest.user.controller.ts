@@ -3,11 +3,15 @@ import { Request, Response } from "express";
 import { leaveRequestRepository } from "../../repositories/leaveRequest.repository";
 import { responseBadRequest, responseCreated, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
+import { validationResult } from "express-validator";
 
 export const leaveRequestUserController = () => {
   const createLeaveRequest = async (req: Request | any, res: Response): Promise<void> => {
     const { title, description, startDate, endDate, leaveTypeId } = req.body; 
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return responseBadRequest(res, errors.array()[0].msg);
 
     if (startDate > new Date()) return responseBadRequest(res, 'Start date must be less than current date');
     if (startDate > endDate) return responseBadRequest(res, 'Start date must be less than end date');
@@ -31,9 +35,16 @@ export const leaveRequestUserController = () => {
     const { title, description, startDate, endDate, leaveTypeId } = req.body; 
     const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return responseBadRequest(res, errors.array()[0].msg);
+
     try {
-      const leaveRequest = await leaveRequestRepository().update(id, user.sub, title, description, startDate, endDate, leaveTypeId);
-      if (!leaveRequest) return responseInternalServerError(res, 'Failed to update leave request');
+      const leaveRequest = await leaveRequestRepository().findById(id);
+      if (!leaveRequest || leaveRequest.user_id !== user.sub) return responseNotFound(res, 'Leave request not found');
+      if (['cancel', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
+
+      const leaveRequestupdate = await leaveRequestRepository().update(id, user.sub, title, description, startDate, endDate, leaveTypeId);
+      if (!leaveRequestupdate) return responseInternalServerError(res, 'Failed to update leave request');
       
       return responseOk(res, 'Leave request updated successfully');
     } catch (error) {

@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { loginValidator, registerValidator, registerWithRoleValidator, updatePasswordValidator, updateProfileValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/user.validator';
-import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
+import { createLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
 import { authorizeAdmin, authorizeAll, authorizeUser, authorizeVerifikator } from '../middlewares/authorization.middleware';
 import { authController } from '../controllers/auth.controller';
 import { accountController } from '../controllers/account.controller';
@@ -45,7 +45,7 @@ router.get("/verifikator/leave-requests/statistics", authorizeVerifikator, leave
 // User
 router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)
 router.get('/user/leave-requests', authorizeUser, leaveRequestUserController().allLeaveRequests)
-router.put('/user/leave-requests/:id', authorizeUser, updateDescriptionLeaveRequestValidator(), leaveRequestUserController().updateLeaveRequest)
+router.put('/user/leave-requests/:id', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().updateLeaveRequest)
 router.put('/user/leave-requests/:id/cancel', authorizeUser, leaveRequestUserController().cancelLeaveRequest)
 router.delete('/user/leave-requests/:id', authorizeUser, leaveRequestUserController().deleteLeaveRequest)
 
