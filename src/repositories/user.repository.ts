@@ -140,6 +140,44 @@ export const userRepository = () => {
     });
   }
 
+  const totalCount = async () => {
+    return await prisma.user.count({
+      where: {
+        role: { 
+          in: ['user', 'verifikator'] 
+        },
+      }
+    });
+  }
+
+  const roleCounts = async () => {
+    return await prisma.user.groupBy({
+      where: {
+        role: { 
+          in: ['user', 'verifikator'] 
+        },
+      },
+      by: ['role'],
+      _count: {
+        role: true
+      }
+    });
+  }
+
+  const verifiedCounts = async () => {
+    return await prisma.user.groupBy({
+      where: {
+        role: { 
+          in: ['user', 'verifikator'] 
+        },
+      },
+      by: ['is_verified'],
+      _count: {
+        is_verified: true
+      }
+    });
+  }
+
   return {
     create,
     createWithRole,
@@ -150,6 +188,9 @@ export const userRepository = () => {
     updateVerified,
     updateRole,
     updateProfile,
-    updatePassword
+    updatePassword,
+    totalCount,
+    roleCounts,
+    verifiedCounts
   }
 }

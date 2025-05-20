@@ -1,6 +1,5 @@
 import prisma from "../config/prisma";
 
-
 export const leaveRequestRepository = () => {
   const create = async (
     user_id: string, 
@@ -180,6 +179,19 @@ export const leaveRequestRepository = () => {
     });
   }
 
+  const totalCount = async () => {
+    return await prisma.leaveRequest.count();
+  }
+
+  const statusCounts = async () => {
+    return await prisma.leaveRequest.groupBy({
+      by: ['status'],
+      _count: {
+        status: true
+      }
+    });
+  }
+
   return {
     create,
     update,
@@ -189,6 +201,8 @@ export const leaveRequestRepository = () => {
     findById,
     updateStatus,
     updateStatusCancel,
-    deleteById
+    deleteById,
+    totalCount,
+    statusCounts
   }
 }

@@ -27,16 +27,20 @@ router.get('/leave-types', leaveTypeController().allLeaveTypes);
 
 // Admin
 router.get('/admin/users', authorizeAdmin, userAdminController().allUsers)
-router.post('/admin/users/register', authorizeAdmin, registerWithRoleValidator(), userAdminController().createNeWUser)
+router.post('/admin/users', authorizeAdmin, registerWithRoleValidator(), userAdminController().createNeWUser)
 router.put('/admin/users/:id/role', authorizeAdmin, updateRoleUserValidator(), userAdminController().updateUserRole)
 router.put('/admin/users/:id/reset-password', authorizeAdmin, updatePasswordValidator(), userAdminController().resetPasswordUser)
+router.get("/admin/users/statistics", authorizeAdmin, userAdminController().getStatistics);
 router.get('/admin/leave-requests', authorizeAdmin, leaveRequestAdminController().allLeaveRequests)
+router.get("/admin/leave-requests/statistics", authorizeAdmin, leaveRequestAdminController().getStatistics);
 
 // Verifikator
 router.get('/verifikator/users', authorizeVerifikator, userVerifikatorController().allUsers)
 router.put('/verifikator/users/:id/verify', authorizeVerifikator, updateVerifiedUserValidator(), userVerifikatorController().updateUserVerified)
+router.get("/verifikator/users/statistics", authorizeVerifikator, userVerifikatorController().getStatistics);
 router.get('/verifikator/leave-requests', authorizeVerifikator, leaveRequestVerifikatorController().allLeaveRequests)
 router.put('/verifikator/leave-requests/:id/reply', authorizeVerifikator, updateLeaveRequestValidator(), leaveRequestVerifikatorController().updateStatus)
+router.get("/verifikator/leave-requests/statistics", authorizeVerifikator, leaveRequestVerifikatorController().getStatistics);
 
 // User
 router.post('/user/leave-requests', authorizeUser, createLeaveRequestValidator(), leaveRequestUserController().createLeaveRequest)

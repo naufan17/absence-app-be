@@ -45,9 +45,33 @@ export const userVerifikatorController = () => {
       return responseInternalServerError(res, 'Failed to update user verified');
     }
   }
+
+    const getStatistics = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const totalCount = await userRepository().totalCount();
+      const verifiedCounts = await userRepository().verifiedCounts();
+      const countsByVerified: Record<'isVerified' | 'notVerified', number> = {
+        isVerified: 0,
+        notVerified: 0
+      };
+
+      verifiedCounts.forEach(item => {
+        const key = item.is_verified ? 'isVerified' : 'notVerified';
+        countsByVerified[key] = item._count.is_verified;
+      });
+
+      return responseOk(res, 'Statistics found', { total: totalCount, ...countsByVerified });
+    } catch (error) {
+      logger.error(error);
+      console.error(error);
+      
+      return responseInternalServerError(res, 'Failed to get statistics');
+    }
+  }
   
   return {
     allUsers,
-    updateUserVerified
+    updateUserVerified,
+    getStatistics
   }
 }

@@ -95,11 +95,35 @@ export const userAdminController = () => {
       return responseInternalServerError(res, 'Failed to update user role');
     }
   }
+
+  const getStatistics = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const totalCount = await userRepository().totalCount();
+      const roleCounts = await userRepository().roleCounts();
+      type Role = 'user' | 'verifikator'
+      const countsByRole: Record<Role, number> = {
+        user: 0,
+        verifikator: 0
+      };
+
+      roleCounts.forEach(item => {
+        countsByRole[item.role as keyof typeof countsByRole] = item._count.role;
+      });
+
+      return responseOk(res, 'Statistics found', { total: totalCount, ...countsByRole });
+    } catch (error) {
+      logger.error(error);
+      console.error(error);
+      
+      return responseInternalServerError(res, 'Failed to get statistics');
+    }
+  }
   
   return {
     allUsers,
     createNeWUser,
     resetPasswordUser,
-    updateUserRole
+    updateUserRole,
+    getStatistics
   }
 }
