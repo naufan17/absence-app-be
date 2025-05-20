@@ -50,6 +50,21 @@ export const loginValidator = () => {
   ]
 }
 
+export const updateProfileValidator = () => {
+  return [
+    body("name")
+      .notEmpty()
+      .withMessage("Name is required")
+      .isString()
+      .withMessage("Name must be a string"),
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email is invalid")
+  ]
+}
+
 export const updatePasswordValidator = () => {
   return [
     body("password")

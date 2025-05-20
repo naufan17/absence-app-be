@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { loginValidator, registerValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/auth.validator';
+import { loginValidator, registerValidator, updatePasswordValidator, updateProfileValidator, updateRoleUserValidator, updateVerifiedUserValidator } from '../validators/user.validator';
 import { createLeaveRequestValidator, updateDescriptionLeaveRequestValidator, updateLeaveRequestValidator } from '../validators/leaveRequest.validator';
 import { authorizeAdmin, authorizeAll, authorizeUser, authorizeVerifikator } from '../middlewares/authorization.middleware';
 import { authController } from '../controllers/auth.controller';
@@ -19,6 +19,8 @@ router.post('/auth/register', registerValidator(), authController().register);
 
 // Account
 router.get('/account/profile', authorizeAll, accountController().profileCurentUser);
+router.post('/account/update-profile', authorizeAll, updateProfileValidator(), accountController().updateProfile);
+router.post('/account/update-password', authorizeAll, updatePasswordValidator(), accountController().updatePassword);
 
 // Leave Type
 router.get('/leave-types', leaveTypeController().allLeaveTypes);

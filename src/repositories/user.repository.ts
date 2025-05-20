@@ -106,6 +106,18 @@ export const userRepository = () => {
     });
   }
 
+  const updateProfile = async (id: string, name: string, email: string) => {
+    return await prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        email
+      }
+    });
+  }
+
   const updatePassword = async (id: string, password: string) => {
     return await prisma.user.update({
       where: {
@@ -125,6 +137,7 @@ export const userRepository = () => {
     findAllWithVerified,
     updateVerified,
     updateRole,
+    updateProfile,
     updatePassword
   }
 }
