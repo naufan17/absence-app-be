@@ -34,17 +34,17 @@ export const createLeaveRequestValidator = () => {
 
 export const updateLeaveRequestValidator = () => {
   return [
-    body('status')
-      .notEmpty()
-      .withMessage('Status is required')
-      .isString()
-      .withMessage('Status must be a string')
-      .isIn(['pending', 'canceled', 'revoked', 'approved', 'rejected'])
-      .withMessage('Status must be one of the following: pending, cancel, revoked, approved, rejected'),
     body('comment')
       .notEmpty()
       .withMessage('Comment is required')
       .isString()
       .withMessage('Comment must be a string'),
+    body('status')
+      .notEmpty()
+      .withMessage('Status is required')
+      .isString()
+      .withMessage('Status must be a string')
+      .isIn(['revoked', 'approved', 'rejected'])
+      .withMessage('Status must be one of the following: revoked, approved, rejected'),
   ]
 }

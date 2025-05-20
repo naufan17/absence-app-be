@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { leaveRequestRepository } from "../../repositories/leaveRequest.repository";
-import { responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
+import { responseBadRequest, responseForbidden, responseInternalServerError, responseNotFound, responseOk } from "../../helpers/reponse.helper";
 import logger from "../../config/logger";
+import { validationResult } from "express-validator";
 
 export const leaveRequestVerifikatorController = () => {
   const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
@@ -24,10 +25,14 @@ export const leaveRequestVerifikatorController = () => {
     const { id } = req.params;
     const { status, comment } = req.body;
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return responseBadRequest(res, errors.array()[0].msg);
+
     try {
       const leaveRequest = await leaveRequestRepository().findById(id);
       if (!leaveRequest) return responseNotFound(res, 'Leave request not found');
-
+      if (['canceled', 'approved', 'revoked', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be replayed');
+      
       const leaveRequestStatus = await leaveRequestRepository().updateStatus(id, status, comment);
       if (!leaveRequestStatus) return responseInternalServerError(res, 'Failed to update leave request status');
       

@@ -41,7 +41,7 @@ export const leaveRequestUserController = () => {
     try {
       const leaveRequest = await leaveRequestRepository().findById(id);
       if (!leaveRequest || leaveRequest.user_id !== user.sub) return responseNotFound(res, 'Leave request not found');
-      if (['cancel', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
+      if (['canceled', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
 
       const leaveRequestupdate = await leaveRequestRepository().update(id, user.sub, title, description, startDate, endDate, leaveTypeId);
       if (!leaveRequestupdate) return responseInternalServerError(res, 'Failed to update leave request');
@@ -78,7 +78,7 @@ export const leaveRequestUserController = () => {
     try {
       const leaveRequest = await leaveRequestRepository().findById(id);
       if (!leaveRequest || leaveRequest.user_id !== user.sub) return responseNotFound(res, 'Leave request not found');
-      if (['cancel', 'revoked', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
+      if (['canceled', 'revoked', 'approved', 'rejected'].includes(leaveRequest.status)) return responseForbidden(res, 'Leave request status cannot be canceled');
 
       const leaveRequestCancel = await leaveRequestRepository().updateStatusCancel(id);
       if (!leaveRequestCancel) return responseInternalServerError(res, 'Failed to cancel leave request');
