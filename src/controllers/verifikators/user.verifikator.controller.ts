@@ -5,7 +5,7 @@ import logger from "../../config/logger";
 
 export const userVerifikatorController = () => {
   const allUsers = async (req: Request, res: Response): Promise<void> => {
-    const { isVerified }: { isVerified?: string } = req.query; 
+    const { isVerified, page, limit }: { isVerified?: string, page?: number, limit?: number } = req.query; 
     let isVerifiedBool: boolean | undefined = undefined;
     
     if (typeof isVerified === 'string') {
@@ -14,10 +14,22 @@ export const userVerifikatorController = () => {
     }
 
     try {
-      const users = await userRepository().findAllWithVerified(isVerifiedBool);
+      const users = await userRepository().findAllWithVerified( Number(page) || 1, Number(limit) || 20, isVerifiedBool);
       if (users.length === 0) return responseNotFound(res, 'Users not found');
 
-      return responseOk(res, 'Users found', users);
+      const totalCount = await userRepository().totalCount(undefined, isVerifiedBool);
+      if (totalCount === 0) return responseNotFound(res, 'Users not found');
+
+      return responseOk(res, 'Users found', {
+        users,
+        meta: {
+          page: Number(page) || 1,
+          limit: Number(limit) || 20,
+          total: users.length,
+          totalData: totalCount,
+          totalPage: Math.ceil(totalCount / (Number(limit) || 20))
+        }
+      });
     } catch (error) {
       logger.error(error);
       console.error(error);

@@ -6,13 +6,25 @@ import logger from "../../config/logger";
 
 export const leaveRequestVerifikatorController = () => {
   const allLeaveRequests = async (req: Request, res: Response): Promise<void> => {
-    const { status }: { status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected' } = req.query;
+    const { status, page, limit }: { status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected', page?: number, limit?: number } = req.query;
 
     try {
-      const leaveRequests = await leaveRequestRepository().findAll(status);
+      const leaveRequests = await leaveRequestRepository().findAll(Number(page) || 1, Number(limit) || 20, status);
       if (leaveRequests.length === 0) return responseNotFound(res, 'Leave requests not found');
 
-      return responseOk(res, 'Leave requests found', leaveRequests);
+      const totalCount = await leaveRequestRepository().totalCount(status);
+      if (totalCount === 0) return responseNotFound(res, 'Leave requests not found');
+
+      return responseOk(res, 'Leave requests found', {
+        leaveRequests,
+        meta: {
+          page: Number(page) || 1,
+          limit: Number(limit) || 20,
+          total: leaveRequests.length,
+          totalData: totalCount,
+          totalPage: Math.ceil(totalCount / (Number(limit) || 20))
+        }
+      });
     } catch (error) {
       logger.error(error);
       console.error(error);

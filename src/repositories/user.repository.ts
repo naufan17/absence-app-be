@@ -51,7 +51,7 @@ export const userRepository = () => {
     });
   }
 
-  const findAllWithRole = async (role?: 'user' | 'verifikator') => {
+  const findAllWithRole = async (page: number, limit: number, role?: 'user' | 'verifikator') => {
     return await prisma.user.findMany({
       where: {
         ...(role ? { 
@@ -62,6 +62,8 @@ export const userRepository = () => {
           } 
         }),
       },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
       orderBy: [
         { role: 'asc' },
         { updated_at: 'desc' }
@@ -75,14 +77,18 @@ export const userRepository = () => {
     });
   }
 
-  const findAllWithVerified = async (is_verified?: boolean) => {
+  const findAllWithVerified = async (page: number, limit: number, is_verified?: boolean) => {
     return await prisma.user.findMany({
       where: {
         role: { 
           in: ['user', 'verifikator'] 
         },
-        is_verified
+        ...(typeof is_verified === 'boolean' ? { 
+          is_verified 
+        } : {}),
       },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
       orderBy: [
         { is_verified: 'asc' },
         { updated_at: 'desc' }
@@ -141,12 +147,27 @@ export const userRepository = () => {
     });
   }
 
-  const totalCount = async () => {
+  const totalCount = async (role?: 'user' | 'verifikator', is_verified?: boolean) => {
     return await prisma.user.count({
       where: {
-        role: { 
-          in: ['user', 'verifikator'] 
-        },
+        ...(role ? { 
+          role 
+        } : { 
+          role: { 
+            in: ['user', 'verifikator'] 
+          } 
+        }),
+        ...(typeof is_verified === 'boolean' ? { 
+          is_verified 
+        } : {}),
+      }
+    });
+  }
+
+  const totalCountByUserId = async (id: string) => {
+    return await prisma.user.count({
+      where: {
+        id
       }
     });
   }
@@ -191,6 +212,7 @@ export const userRepository = () => {
     updateProfile,
     updatePassword,
     totalCount,
+    totalCountByUserId,
     roleCounts,
     verifiedCounts
   }

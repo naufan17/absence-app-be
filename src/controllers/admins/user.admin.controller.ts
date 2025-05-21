@@ -7,13 +7,25 @@ import logger from "../../config/logger";
 
 export const userAdminController = () => {
   const allUsers = async (req: Request, res: Response): Promise<void> => {
-    const { role }: { role?: 'verifikator' | 'user' } = req.query;
+    const { role, page, limit }: { role?: 'verifikator' | 'user', page?: number, limit?: number } = req.query;
 
     try {
-      const users = await userRepository().findAllWithRole(role);
+      const users = await userRepository().findAllWithRole(Number(page) || 1, Number(limit) || 20, role);
       if (users.length === 0) return responseNotFound(res, 'Users not found');
 
-      return responseOk(res, 'Users found', users);
+      const totalCount = await userRepository().totalCount(role);
+      if (totalCount === 0) return responseNotFound(res, 'Users not found');
+
+      return responseOk(res, 'Users found', { 
+        users, 
+        meta: { 
+          page: Number(page) || 1,
+          limit: Number(limit) || 20,
+          total: users.length,
+          totalData: totalCount,
+          totalPage: Math.ceil(totalCount / (Number(limit) || 20))
+        }
+      });
     } catch (error) {
       logger.error(error);
       console.error(error);

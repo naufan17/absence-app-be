@@ -39,11 +39,13 @@ export const leaveRequestRepository = () => {
     });
   }
 
-  const findAll = async (status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
+  const findAll = async (page: number, limit: number, status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
     return await prisma.leaveRequest.findMany({
       where: {
         status
       },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
       orderBy: {
         updated_at: 'desc'
       },
@@ -69,7 +71,7 @@ export const leaveRequestRepository = () => {
     });
   }
 
-  const findAllByStatus = async (status: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
+  const findAllByStatus = async (page: number, limit: number, status: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
     return await prisma.leaveRequest.findMany({
       where: {
         status
@@ -77,6 +79,8 @@ export const leaveRequestRepository = () => {
       orderBy: {
         created_at: 'desc'
       },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
       select: {
         id: true,
         user: {
@@ -99,7 +103,7 @@ export const leaveRequestRepository = () => {
     });
   }
 
-  const findAllByUserId = async (user_id: string) => {
+  const findAllByUserId = async (page: number, limit: number, user_id: string) => {
     return await prisma.leaveRequest.findMany({
       where: {
         user_id
@@ -107,6 +111,8 @@ export const leaveRequestRepository = () => {
       orderBy: {
         created_at: 'desc'
       },
+      skip: page && limit ? (page - 1) * limit : undefined,
+      take: limit,
       select: {
         id: true,
         title: true,
@@ -179,8 +185,12 @@ export const leaveRequestRepository = () => {
     });
   }
 
-  const totalCount = async () => {
-    return await prisma.leaveRequest.count();
+  const totalCount = async (status?: 'pending' | 'canceled' | 'revoked' | 'approved' | 'rejected') => {
+    return await prisma.leaveRequest.count({
+      where: {
+        status
+      }
+    });
   }
 
   const statusCounts = async () => {

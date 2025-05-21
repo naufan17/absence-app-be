@@ -56,13 +56,25 @@ export const leaveRequestUserController = () => {
   }
 
   const allLeaveRequests = async (req: Request | any, res: Response): Promise<void> => {
-    const { user }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' } } = req;
+    const { user, page, limit }: { user: { sub: string, role: 'admin' | 'verifikator' | 'user' }, page?: number, limit?: number } = req;
 
     try {
-      const leaveRequests = await leaveRequestRepository().findAllByUserId(user.sub);
+      const leaveRequests = await leaveRequestRepository().findAllByUserId(Number(page) || 1, Number(limit) || 20, user.sub);
       if (leaveRequests.length === 0) return responseNotFound(res, 'Leave requests not found');
+      
+      const leaveRequestCount = await leaveRequestRepository().totalCountByUserId(user.sub);
+      if (leaveRequestCount === 0) return responseNotFound(res, 'Leave requests not found');
 
-      return responseOk(res, 'Leave requests found', leaveRequests);
+      return responseOk(res, 'Leave requests found', {
+        leaveRequests,
+        meta: {
+          page: Number(page) || 1,
+          limit: Number(limit) || 20,
+          total: leaveRequests.length,
+          totalData: leaveRequestCount,
+          totalPage: Math.ceil(leaveRequestCount / (Number(limit) || 20))
+        }
+      });
     } catch (error) {
       logger.error(error);
       console.error(error);
