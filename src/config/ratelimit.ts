@@ -1,12 +1,11 @@
-import cors, { CorsOptions } from "cors";
+import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
 import config from "./config";
 
-const corsOptions: CorsOptions = {
-  origin: config.CorsOrigin,
-  methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
-  allowedHeaders: ['Origin', 'Content-Type', 'Content-Length', 'Authorization'],
-  credentials: true,
-  maxAge: 86400
-};
+const limiter: RateLimitRequestHandler = rateLimit({
+  windowMs: Number(config.RateLimitWindowMs),   
+  max: Number(config.RateLimitMax),
+  message: "Too many requests, please try again",
+  headers: true
+});
 
-export default cors(corsOptions);
+export default limiter;
